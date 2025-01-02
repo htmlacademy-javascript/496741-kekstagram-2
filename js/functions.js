@@ -1,10 +1,10 @@
-function checkLength(string, length) {
-  return string.length <= length;
+function checkLength(inputString, length) {
+  return inputString.length <= length;
 }
 
-function checkForPalindrome(string) {
+function checkForPalindrome(inputString) {
 
-  const newString = string.replaceAll(' ', '').toLowerCase();
+  const newString = inputString.replaceAll(' ', '').toLowerCase();
   let i = 0;
 
   while (i <= (newString.length / 2 - 1)) {
@@ -17,8 +17,8 @@ function checkForPalindrome(string) {
   return true;
 }
 
-function getNumberFromString(string) {
-  const NEW_STRING = string.toString();
+function getNumberFromString(inputString) {
+  const NEW_STRING = inputString.toString();
   let number = '';
   for (let i = 0; i < NEW_STRING.length; i++) {
     number += isNaN(parseInt(NEW_STRING[i], 10)) ? '' : NEW_STRING[i];
