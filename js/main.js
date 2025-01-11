@@ -51,7 +51,7 @@ const getRandomArrayElement = (array) => array[getRandomInteger(0, array.length 
 const createIdGenerator = () => {
   let lastGeneratedId = 0;
 
-  return function () {
+  return () => {
     lastGeneratedId += 1;
     return lastGeneratedId;
   };
