@@ -18,10 +18,10 @@ function checkForPalindrome(inputString) {
 }
 
 function getNumberFromString(inputString) {
-  const NEW_STRING = inputString.toString();
+  const newString = inputString.toString();
   let number = '';
-  for (let i = 0; i < NEW_STRING.length; i++) {
-    number += isNaN(parseInt(NEW_STRING[i], 10)) ? '' : NEW_STRING[i];
+  for (let i = 0; i < newString.length; i++) {
+    number += isNaN(parseInt(newString[i], 10)) ? '' : newString[i];
   }
   return parseInt(number, 10);
 }
