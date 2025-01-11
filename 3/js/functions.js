@@ -1,8 +1,6 @@
-function checkLength(inputString, length) {
-  return inputString.length <= length;
-}
+const checkLength = (inputString, length) => inputString.length <= length;
 
-function checkForPalindrome(inputString) {
+const checkForPalindrome = (inputString) => {
 
   const newString = inputString.replaceAll(' ', '').toLowerCase();
   let i = 0;
@@ -15,16 +13,17 @@ function checkForPalindrome(inputString) {
   }
 
   return true;
-}
+};
 
-function getNumberFromString(inputString) {
+const getNumberFromString = (inputString) => {
+
   const newString = inputString.toString();
   let number = '';
   for (let i = 0; i < newString.length; i++) {
     number += isNaN(parseInt(newString[i], 10)) ? '' : newString[i];
   }
   return parseInt(number, 10);
-}
+};
 
 checkLength('случайная строка', 18);
 checkLength('случайная строка', 0);
