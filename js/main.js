@@ -3,6 +3,9 @@ const MIN_COUNT_LIKES = 15;
 const MAX_COUNT_LIKES = 200;
 const MIN_COUNT_COMMENTS = 0;
 const MAX_COUNT_COMMENTS = 30;
+const MIN_COUNT_AVATAR = 1;
+const MAX_COUNT_AVATAR = 6;
+
 const COMMENTS = [
   'Всё отлично!',
   'В целом всё неплохо.',
@@ -51,10 +54,7 @@ const getRandomArrayElement = (array) => array[getRandomInteger(0, array.length 
 const createIdGenerator = () => {
   let lastGeneratedId = 0;
 
-  return () => {
-    lastGeneratedId += 1;
-    return lastGeneratedId;
-  };
+  return () => ++lastGeneratedId;
 };
 
 const generatePhotoId = createIdGenerator();
@@ -62,7 +62,7 @@ const generateCommentId = createIdGenerator();
 
 const generateComment = () => ({
   id: generateCommentId(),
-  avatar: `img/avatar-${getRandomInteger(1, 6)}.svg`,
+  avatar: `img/avatar-${getRandomInteger(MIN_COUNT_AVATAR, MAX_COUNT_AVATAR)}.svg`,
   message: getRandomArrayElement(COMMENTS),
   name: getRandomArrayElement(NAMES),
 });
