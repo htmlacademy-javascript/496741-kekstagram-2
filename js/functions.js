@@ -1,3 +1,4 @@
+const NUMBER_MINUTES_IN_HOURS = 60;
 const checkLength = (inputString, length) => inputString.length <= length;
 
 const checkForPalindrome = (inputString) => {
@@ -25,9 +26,9 @@ const getNumberFromString = (inputString) => {
   return parseInt(number, 10);
 };
 
-const parseTime = (hours) => {
-  const arrayHours = hours.split(':');
-  return arrayHours[0] * 60 + Number(arrayHours[1]);
+const parseTime = (time) => {
+  const [hours, minutes] = time.split(':').map(Number);
+  return hours * NUMBER_MINUTES_IN_HOURS + minutes;
 };
 
 const isMeetingInWorkingHours = (
