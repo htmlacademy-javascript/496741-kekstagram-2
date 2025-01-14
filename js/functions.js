@@ -25,6 +25,25 @@ const getNumberFromString = (inputString) => {
   return parseInt(number, 10);
 };
 
+const parseTime = (hours) => {
+  const arrayHours = hours.split(':');
+  return arrayHours[0] * 60 + Number(arrayHours[1]);
+};
+
+const isMeetingInWorkingHours = (
+  startWorkingTime,
+  endWorkingTime,
+  startMeetingTime,
+  durationOfMeeting
+) => {
+  const startWorkingInMinutes = parseTime(startWorkingTime);
+  const endWorkingInMinutes = parseTime(endWorkingTime);
+  const startMeetingInMinutes = parseTime(startMeetingTime);
+
+  return startWorkingInMinutes <= startMeetingInMinutes
+    && (startMeetingInMinutes + durationOfMeeting) <= endWorkingInMinutes;
+};
+
 checkLength('случайная строка', 18);
 checkLength('случайная строка', 0);
 checkForPalindrome('Топот');
@@ -38,3 +57,8 @@ getNumberFromString('а я томат');
 getNumberFromString(2023);
 getNumberFromString(-1);
 getNumberFromString(1.5);
+isMeetingInWorkingHours('08:00', '17:30', '14:00', 90);
+isMeetingInWorkingHours('8:0', '10:0', '8:0', 120);
+isMeetingInWorkingHours('08:00', '14:30', '14:00', 90);
+isMeetingInWorkingHours('14:00', '17:30', '08:0', 90);
+isMeetingInWorkingHours('8:00', '17:30', '08:00', 900);
