@@ -3,7 +3,7 @@ import { getArrayPhotos } from './data';
 const pictureTemplate = document.querySelector('#picture')
   .content.
   querySelector('.picture');
-const pictures = document.querySelector('.pictures');
+const picturesContainer = document.querySelector('.pictures');
 
 const photos = getArrayPhotos();
 const picturesFragment = document.createDocumentFragment();
@@ -17,4 +17,4 @@ photos.forEach(({ url, description, likes, comments }) => {
   picturesFragment.append(picture);
 });
 
-pictures.append(picturesFragment);
+picturesContainer.append(picturesFragment);
