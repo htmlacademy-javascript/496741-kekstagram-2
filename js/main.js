@@ -1,3 +1,1 @@
-import { getArrayPhotos } from './data';
-
-getArrayPhotos();
+import './picture';
