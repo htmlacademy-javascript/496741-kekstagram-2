@@ -1,4 +1,5 @@
-import { getArrayPhotos } from './data';
+import { photos } from './data';
 import { renderPhotos } from './picture';
+import './big-picture';
 
-renderPhotos(getArrayPhotos());
+renderPhotos(photos);
