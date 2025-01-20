@@ -1,3 +1,4 @@
 import { getArrayPhotos } from './data';
+import { renderPhotos } from './picture';
 
-getArrayPhotos();
+renderPhotos(getArrayPhotos());
