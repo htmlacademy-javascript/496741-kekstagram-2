@@ -1,11 +1,10 @@
-import { getArrayPhotos } from './data';
+import { photos } from './data';
 
 const pictureTemplate = document.querySelector('#picture')
   .content.
   querySelector('.picture');
 const picturesContainer = document.querySelector('.pictures');
 
-const photos = getArrayPhotos();
 const picturesFragment = document.createDocumentFragment();
 
 photos.forEach(({ url, description, likes, comments }) => {
