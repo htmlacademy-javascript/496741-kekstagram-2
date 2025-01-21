@@ -19,11 +19,16 @@ const isEnterKey = (evt) => evt.key === 'Enter';
 
 const isTabKey = (evt) => evt.key === 'Tab';
 
+const clearElement = (element) => {
+  element.innerHTML = '';
+};
+
 export {
   getRandomInteger,
   getRandomArrayElement,
   createIdGenerator,
   isEscapeKey,
   isEnterKey,
-  isTabKey
+  isTabKey,
+  clearElement
 };
