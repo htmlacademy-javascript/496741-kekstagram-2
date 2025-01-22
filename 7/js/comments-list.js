@@ -11,4 +11,4 @@ const renderCommentsList = (parrentElement, comments) => {
   });
 };
 
-export {renderCommentsList};
+export { renderCommentsList };
