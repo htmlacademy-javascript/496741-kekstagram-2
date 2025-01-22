@@ -33,6 +33,7 @@ const generateBigPictureModal = () => {
   };
 
   const closeBigPicture = () => {
+    bodyElement.classList.remove('modal-open');
     bigPictureElement.classList.add('hidden');
     document.removeEventListener('keydown', onDocumentKeydown);
   };
