@@ -1,6 +1,6 @@
 import { photos } from './data';
 import { renderPhotos } from './picture';
-import { generateBigPictureModal } from './big-picture';
+import { generateBigPictureModal } from './gallery';
 
 renderPhotos(photos);
 generateBigPictureModal();
