@@ -25,8 +25,6 @@ const fillBigPictureWithData = ({url, description, likes, comments}) => {
   bigPictureElement.querySelector('.likes-count').textContent = likes;
   bigPictureElement.querySelector('.social__caption').textContent = description;
   commentsCountElement.textContent = comments.length;
-
-  commentsCountElement.textContent = comments.length;
   loadComments(shownComments);
 
   commentsLoaderButtonElement.addEventListener('click', () => {
