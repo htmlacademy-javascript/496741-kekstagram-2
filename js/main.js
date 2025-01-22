@@ -1,4 +1,6 @@
-import { getArrayPhotos } from './data';
+import { photos } from './data';
 import { renderPhotos } from './picture';
+import { generateBigPictureModal } from './gallery';
 
-renderPhotos(getArrayPhotos());
+renderPhotos(photos);
+generateBigPictureModal();
