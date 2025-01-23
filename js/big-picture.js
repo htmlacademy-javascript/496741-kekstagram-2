@@ -34,21 +34,17 @@ const fillBigPictureWithData = ({url, description, likes, comments}) => {
     evt.preventDefault();
     if (comments.length > commentsShownCounter) {
       loadComments(comments.slice(commentsShownCounter, commentsShownCounter + COMMENTS_SHOWN_STEP));
-      commentsShownCounter += COMMENTS_SHOWN_STEP;
+      commentsShownCounter = Math.min(comments.length, commentsShownCounter + COMMENTS_SHOWN_STEP);
+      commentShownCountElement.textContent = commentsShownCounter;
     }
-
     if (commentsShownCounter >= comments.length) {
-      commentShownCountElement.textContent = comments.length;
       commentsLoaderButtonElement.classList.add('hidden');
       commentsLoaderButtonElement.removeEventListener('click', onCommentsLoaderButtonClick);
-    } else {
-      commentShownCountElement.textContent = commentsShownCounter;
     }
   };
 
   if (comments.length <= shownComments.length) {
     commentsLoaderButtonElement.classList.add('hidden');
-
   } else {
     commentsLoaderButtonElement.classList.remove('hidden');
     commentsLoaderButtonElement.addEventListener('click', onCommentsLoaderButtonClick);
