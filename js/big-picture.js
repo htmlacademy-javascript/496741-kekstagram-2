@@ -8,13 +8,9 @@ const commentsListElement = bigPictureElement.querySelector('.social__comments')
 const commentShownCountElement = bigPictureElement.querySelector('.social__comment-shown-count');
 const commentsCountElement = bigPictureElement.querySelector('.social__comment-total-count');
 const commentsLoaderButtonElement = bigPictureElement.querySelector('.social__comments-loader');
+const pictureCloseButtonElement = bigPictureElement.querySelector('.big-picture__cancel');
 
 const loadComments = (comments) => {
-  renderCommentsList(commentsListElement, comments);
-};
-
-const fillBigPictureWithData = ({url, description, likes, comments}) => {
-
   let commentsShownCounter = 5;
 
   const shownComments =
@@ -22,18 +18,15 @@ const fillBigPictureWithData = ({url, description, likes, comments}) => {
     comments.slice(0, commentsShownCounter) :
     comments;
 
-  bigPictureElement.querySelector('.big-picture__img img').src = url;
-  bigPictureElement.querySelector('.likes-count').textContent = likes;
-  bigPictureElement.querySelector('.social__caption').textContent = description;
   commentsCountElement.textContent = comments.length;
   commentShownCountElement.textContent = shownComments.length;
   clearElement(commentsListElement);
-  loadComments(shownComments);
+  renderCommentsList(shownComments);
 
   const onCommentsLoaderButtonClick = (evt) => {
     evt.preventDefault();
     if (comments.length > commentsShownCounter) {
-      loadComments(comments.slice(commentsShownCounter, commentsShownCounter + COMMENTS_SHOWN_STEP));
+      renderCommentsList(comments.slice(commentsShownCounter, commentsShownCounter + COMMENTS_SHOWN_STEP));
       commentsShownCounter = Math.min(comments.length, commentsShownCounter + COMMENTS_SHOWN_STEP);
       commentShownCountElement.textContent = commentsShownCounter;
     }
@@ -49,6 +42,18 @@ const fillBigPictureWithData = ({url, description, likes, comments}) => {
     commentsLoaderButtonElement.classList.remove('hidden');
     commentsLoaderButtonElement.addEventListener('click', onCommentsLoaderButtonClick);
   }
+
+  pictureCloseButtonElement.addEventListener('click', () => {
+    commentsLoaderButtonElement.removeEventListener('click', onCommentsLoaderButtonClick);
+  }, {once: true});
+};
+
+const fillBigPictureWithData = ({url, description, likes, comments}) => {
+
+  bigPictureElement.querySelector('.big-picture__img img').src = url;
+  bigPictureElement.querySelector('.likes-count').textContent = likes;
+  bigPictureElement.querySelector('.social__caption').textContent = description;
+  loadComments(comments);
 };
 
 export { fillBigPictureWithData };
