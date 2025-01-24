@@ -1,6 +1,8 @@
-const renderCommentsList = (parrentElement, comments) => {
+const commentsListElement = document.querySelector('.social__comments');
+
+const renderCommentsList = (comments) => {
   comments.forEach(({avatar, message, name}) => {
-    parrentElement.insertAdjacentHTML('beforeend',
+    commentsListElement.insertAdjacentHTML('beforeend',
       `<li class="social__comment">
         <img class="social__picture"
           src=${avatar}
