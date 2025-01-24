@@ -12,7 +12,7 @@ const commentsLoaderButtonElement = bigPictureElement.querySelector('.social__co
 const pictureCloseButtonElement = bigPictureElement.querySelector('.big-picture__cancel');
 
 const loadComments = (comments) => {
-  let commentsShownCounter = 5;
+  let commentsShownCounter = COMMENTS_SHOWN_STEP;
 
   const shownComments =
   comments.length > commentsShownCounter ?
@@ -24,7 +24,11 @@ const loadComments = (comments) => {
   clearElement(commentsListElement);
   renderCommentsList(shownComments);
 
-  const onCommentsLoaderButtonClick = (evt) => {
+  const hideCommentsLoaderButton = () => {
+    commentsLoaderButtonElement.classList.add('hidden');
+  };
+
+  const onCommentsLoaderButtonElementClick = (evt) => {
     evt.preventDefault();
     if (comments.length > commentsShownCounter) {
       renderCommentsList(comments.slice(commentsShownCounter, commentsShownCounter + COMMENTS_SHOWN_STEP));
@@ -32,31 +36,31 @@ const loadComments = (comments) => {
       commentShownCountElement.textContent = commentsShownCounter;
     }
     if (commentsShownCounter === comments.length) {
-      commentsLoaderButtonElement.classList.add('hidden');
-      commentsLoaderButtonElement.removeEventListener('click', onCommentsLoaderButtonClick);
+      hideCommentsLoaderButton();
+      commentsLoaderButtonElement.removeEventListener('click', onCommentsLoaderButtonElementClick);
     }
   };
 
   if (comments.length === shownComments.length) {
-    commentsLoaderButtonElement.classList.add('hidden');
+    hideCommentsLoaderButton();
   } else {
-    commentsLoaderButtonElement.addEventListener('click', onCommentsLoaderButtonClick);
+    commentsLoaderButtonElement.addEventListener('click', onCommentsLoaderButtonElementClick);
   }
 
-  const onDocumentEscKeydown = (evt) => {
+  const onDocumentKeydown = (evt) => {
     if (isEscapeKey(evt)) {
       evt.preventDefault();
-      commentsLoaderButtonElement.removeEventListener('click', onCommentsLoaderButtonClick);
+      commentsLoaderButtonElement.removeEventListener('click', onCommentsLoaderButtonElementClick);
     }
   };
 
   pictureCloseButtonElement.addEventListener('click', (evt) => {
     evt.preventDefault();
-    commentsLoaderButtonElement.removeEventListener('click', onCommentsLoaderButtonClick);
-    document.removeEventListener('keydown', onDocumentEscKeydown);
+    commentsLoaderButtonElement.removeEventListener('click', onCommentsLoaderButtonElementClick);
+    document.removeEventListener('keydown', onDocumentKeydown);
   }, {once: true});
 
-  document.addEventListener('keydown', onDocumentEscKeydown, {once: true});
+  document.addEventListener('keydown', onDocumentKeydown, {once: true});
 };
 
 const fillBigPictureWithData = ({url, description, likes, comments}) => {
