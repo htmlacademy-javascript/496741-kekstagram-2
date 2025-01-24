@@ -1,5 +1,5 @@
 import { isEscapeKey } from './util';
-import { getCommentsById } from './get-comments';
+import { getPictureData } from './get-picture-data';
 import { fillBigPictureWithData } from './big-picture';
 
 const generateBigPictureModal = () => {
@@ -10,20 +10,8 @@ const generateBigPictureModal = () => {
   const commentsLoaderButtonElement = bigPictureElement.querySelector('.social__comments-loader');
   const pictureCloseButtonElement = bigPictureElement.querySelector('.big-picture__cancel');
 
-  const getPictureData = (pictureElement) => {
-    const imgElement = pictureElement.querySelector('.picture__img');
-    return {
-      id: imgElement.id,
-      url: imgElement.src,
-      description: imgElement.alt,
-      likes: pictureElement.querySelector('.picture__likes').textContent,
-      comments: getCommentsById(imgElement.id),
-    };
-  };
-
-
   const openBigPicture = (evt) => {
-    const pictureData = getPictureData(evt.target);
+    const pictureData = getPictureData(evt.target.id);
 
     bodyElement.classList.add('modal-open');
     bigPictureElement.classList.remove('hidden');
@@ -48,7 +36,7 @@ const generateBigPictureModal = () => {
   }
 
   const onPictureOpenClick = (evt) => {
-    if (evt.target.matches('.picture')) {
+    if (evt.target.closest('.picture')) {
       evt.preventDefault();
       openBigPicture(evt);
     }

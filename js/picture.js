@@ -1,7 +1,7 @@
 const renderPhotos = (photos) => {
   const pictureTemplate = document.querySelector('#picture')
-    .content.
-    querySelector('.picture');
+    .content
+    .querySelector('.picture');
   const picturesContainerElement = document.querySelector('.pictures');
 
   const picturesFragment = document.createDocumentFragment();
@@ -10,7 +10,7 @@ const renderPhotos = (photos) => {
     const picture = pictureTemplate.cloneNode(true);
     const pictureImgElement = picture.querySelector('.picture__img');
 
-    pictureImgElement.id = id;
+    picture.id = id;
     pictureImgElement.src = url;
     pictureImgElement.alt = description;
     picture.querySelector('.picture__likes').textContent = likes;
