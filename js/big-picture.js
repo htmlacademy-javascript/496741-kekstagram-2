@@ -1,5 +1,6 @@
 import { clearElement } from './util';
 import { renderCommentsList } from './comments-list';
+import { isEscapeKey } from './util';
 
 const COMMENTS_SHOWN_STEP = 5;
 
@@ -30,22 +31,32 @@ const loadComments = (comments) => {
       commentsShownCounter = Math.min(comments.length, commentsShownCounter + COMMENTS_SHOWN_STEP);
       commentShownCountElement.textContent = commentsShownCounter;
     }
-    if (commentsShownCounter >= comments.length) {
+    if (commentsShownCounter === comments.length) {
       commentsLoaderButtonElement.classList.add('hidden');
       commentsLoaderButtonElement.removeEventListener('click', onCommentsLoaderButtonClick);
     }
   };
 
-  if (comments.length <= shownComments.length) {
+  if (comments.length === shownComments.length) {
     commentsLoaderButtonElement.classList.add('hidden');
   } else {
-    commentsLoaderButtonElement.classList.remove('hidden');
     commentsLoaderButtonElement.addEventListener('click', onCommentsLoaderButtonClick);
   }
 
-  pictureCloseButtonElement.addEventListener('click', () => {
+  const onDocumentEscKeydown = (evt) => {
+    if (isEscapeKey(evt)) {
+      evt.preventDefault();
+      commentsLoaderButtonElement.removeEventListener('click', onCommentsLoaderButtonClick);
+    }
+  };
+
+  pictureCloseButtonElement.addEventListener('click', (evt) => {
+    evt.preventDefault();
     commentsLoaderButtonElement.removeEventListener('click', onCommentsLoaderButtonClick);
+    document.removeEventListener('keydown', onDocumentEscKeydown);
   }, {once: true});
+
+  document.addEventListener('keydown', onDocumentEscKeydown, {once: true});
 };
 
 const fillBigPictureWithData = ({url, description, likes, comments}) => {

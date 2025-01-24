@@ -35,6 +35,7 @@ const generateBigPictureModal = () => {
   const closeBigPicture = () => {
     bodyElement.classList.remove('modal-open');
     bigPictureElement.classList.add('hidden');
+    commentsLoaderButtonElement.classList.remove('hidden');
     document.removeEventListener('keydown', onDocumentKeydown);
   };
 
