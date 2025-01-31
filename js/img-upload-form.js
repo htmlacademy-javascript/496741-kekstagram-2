@@ -4,7 +4,7 @@ const MAX_COMMENT_LENGTH = 140;
 const MAX_HASHTAG_LENGTH = 20;
 const MAX_HASHTAGS_COUNT = 5;
 
-const errorMessage = {
+const ErrorMessage = {
   HASH_SYMBOL: 'хэштег начинается с символа # (решётка)',
   ONLY_HASH_SYMBOL: 'хеш-тег не может состоять только из одной решётки',
   SPECIAL_CHARACTER:  'строка после решётки не может содержать спецсимволы (#, @, $ и т. п.)',
@@ -19,27 +19,27 @@ const errorMessage = {
 const hashtagRestrictions = [
   {
     regularExpression: /^#/,
-    errorText: errorMessage.HASH_SYMBOL,
+    errorText: ErrorMessage.HASH_SYMBOL,
   },
   {
     regularExpression: /^.{2,}$/,
-    errorText: errorMessage.ONLY_HASH_SYMBOL,
+    errorText: ErrorMessage.ONLY_HASH_SYMBOL,
   },
   {
     regularExpression: /^#([a-zа-яё0-9]+)$/i,
-    errorText: errorMessage.SPECIAL_CHARACTER,
+    errorText: ErrorMessage.SPECIAL_CHARACTER,
   },
   {
     regularExpression: /^#([a-zа-яё0-9]+)$/i,
-    errorText: errorMessage.PUNCTUATION_CHARACTER,
+    errorText: ErrorMessage.PUNCTUATION_CHARACTER,
   },
   {
     regularExpression: /^#([a-zа-яё0-9]+)$/i,
-    errorText: errorMessage.EMOJI,
+    errorText: ErrorMessage.EMOJI,
   },
   {
     regularExpression: /^.{1,20}$/,
-    errorText: errorMessage.MAX_HASHTAG_LENGTH,
+    errorText: ErrorMessage.MAX_HASHTAG_LENGTH,
   }
 ];
 
@@ -136,19 +136,19 @@ const validateHashtagsDublicat = (value) => {
 pristine.addValidator(
   textHashtagsInputElement,
   validateHashtagsCount,
-  errorMessage.MAX_HASHTAGS_COUNT
+  ErrorMessage.MAX_HASHTAGS_COUNT
 );
 
 pristine.addValidator(
   textHashtagsInputElement,
   validateHashtagsDublicat,
-  errorMessage.HASHTAG_DUPLICATION
+  ErrorMessage.HASHTAG_DUPLICATION
 );
 
 pristine.addValidator(
   textDescriptionTextareaElement,
   validateCommentsField,
-  errorMessage.MAX_COMMENT_LENGTH
+  ErrorMessage.MAX_COMMENT_LENGTH
 );
 
 uploadFormElement.addEventListener('submit', (evt) => {
