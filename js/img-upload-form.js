@@ -37,24 +37,15 @@ const hashtagRestrictions = [
     regularExpression: /^#([a-zа-яё0-9]+)$/i,
     errorText: errorMessage.EMOJI,
   },
-  // {
-  //   regularExpression: /^#/,
-  //   errorText: errorMessage.HASH_SYMBOL,
-  // },
-  // {
-  //   regularExpression: /^#/,
-  //   errorText: errorMessage.HASH_SYMBOL,
-  // },
-  // {
-  //   regularExpression: /^#/,
-  //   errorText: errorMessage.HASH_SYMBOL,
-  // }
+  {
+    regularExpression: /^.{1,20}$/,
+    errorText: errorMessage.MAX_HASHTAG_LENGTH,
+  }
 ];
 
 const bodyElement = document.querySelector('body');
 const uploadFormElement = document.querySelector('.img-upload__form');
 const imgUploadInputElement = uploadFormElement.querySelector('#upload-file');
-//const imgUploadControlElement = uploadFormElement.querySelector('.img-upload__control');
 const imgUploadOverlayElement = uploadFormElement.querySelector('.img-upload__overlay');
 const uploadCancelButtonElement = uploadFormElement.querySelector('#upload-cancel');
 const textHashtagsInputElement = uploadFormElement.querySelector('.text__hashtags');
@@ -62,12 +53,10 @@ const textDescriptionTextareaElement = uploadFormElement.querySelector('.text__d
 
 const pristine = new Pristine(uploadFormElement,
   {
-    classTo: 'img-upload__form', // Элемент, на который будут добавляться классы
-    // errorClass: 'form__item--invalid', // Класс, обозначающий невалидное поле
-    // successClass: 'form__item--valid', // Класс, обозначающий валидное поле
-    errorTextParent: 'img-upload__field-wrapper', // Элемент, куда будет выводиться текст с ошибкой
-    errorTextTag: 'div', // Тег, который будет обрамлять текст ошибки
-    errorTextClass: 'img-upload__field-wrapper--error' // Класс для элемента с текстом ошибки
+    classTo: 'img-upload__form',
+    errorTextParent: 'img-upload__field-wrapper',
+    errorTextTag: 'div',
+    errorTextClass: 'img-upload__field-wrapper--error'
   }
 );
 
@@ -107,9 +96,9 @@ const uploadImg = () => {
 const createHashtagValidators = () => {
   for (let i = 0; i < hashtagRestrictions.length; i++) {
 
-    const validateHashtagsField = (value) => {
+    const validateHashtag = (value) => {
 
-      const hashtags = value.split(/\s+/);
+      const hashtags = value.trim().split(/\s+/);
       let result = true;
 
       hashtags.forEach((element) => {
@@ -124,19 +113,41 @@ const createHashtagValidators = () => {
 
     pristine.addValidator(
       textHashtagsInputElement,
-      validateHashtagsField,
+      validateHashtag,
       hashtagRestrictions[i].errorText
     );
   }
 };
 
-const validateCommentssField = (value) => value.length <= MAX_COMMENT_LENGTH;
+const validateHashtagsCount = (value) => {
+  const hashtags = value.trim().split(/\s+/);
+  return hashtags.length <= MAX_HASHTAGS_COUNT;
+};
+
+const validateCommentsField = (value) => value.length <= MAX_COMMENT_LENGTH;
 
 createHashtagValidators();
 
+const validateHashtagsDublicat = (value) => {
+  const hashtags = value.trim().split(/\s+/);
+  return !hashtags.some((hashtag, index) => hashtags.indexOf(hashtag) !== index);
+};
+
+pristine.addValidator(
+  textHashtagsInputElement,
+  validateHashtagsCount,
+  errorMessage.MAX_HASHTAGS_COUNT
+);
+
+pristine.addValidator(
+  textHashtagsInputElement,
+  validateHashtagsDublicat,
+  errorMessage.HASHTAG_DUPLICATION
+);
+
 pristine.addValidator(
   textDescriptionTextareaElement,
-  validateCommentssField,
+  validateCommentsField,
   errorMessage.MAX_COMMENT_LENGTH
 );
 
