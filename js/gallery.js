@@ -36,7 +36,7 @@ const generateBigPictureModal = () => {
   }
 
   const onPictureOpenClick = (evt) => {
-    if (evt.target.closest('.picture')) {
+    if (evt.target.matches('.picture')) {
       evt.preventDefault();
       openBigPicture(evt);
     }
