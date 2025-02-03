@@ -4,44 +4,15 @@ const MAX_COMMENT_LENGTH = 140;
 const MAX_HASHTAG_LENGTH = 20;
 const MAX_HASHTAGS_COUNT = 5;
 
-const ErrorMessage = {
-  HASH_SYMBOL: 'хэштег начинается с символа # (решётка)',
-  ONLY_HASH_SYMBOL: 'хеш-тег не может состоять только из одной решётки',
-  SPECIAL_CHARACTER:  'строка после решётки не может содержать спецсимволы (#, @, $ и т. п.)',
-  PUNCTUATION_CHARACTER: 'хэштег не может содержать символы пунктуации (тире, дефис, запятая и т. п.)',
-  EMOJI: 'хэштег не может содержать эмодзи',
-  HASHTAG_DUPLICATION: 'один и тот же хэштег не может быть использован дважды',
-  MAX_HASHTAGS_COUNT: `нельзя указать больше ${numDecline(MAX_HASHTAGS_COUNT, 'хэштега', 'хэштегов', 'хэштегов')}`,
-  MAX_HASHTAG_LENGTH: `максимальная длина одного хэштега ${numDecline(MAX_HASHTAG_LENGTH, 'символа', 'символов', 'символов')}, включая решётку`,
-  MAX_COMMENT_LENGTH: `длина комментария не может составлять больше ${numDecline(MAX_COMMENT_LENGTH, 'символа', 'символов', 'символов')}`,
-};
+const hashtagRegularExpression = /^#[a-zа-яё0-9]{1,19}$/i;
 
-const hashtagRestrictions = [
-  {
-    regularExpression: /^#/,
-    errorText: ErrorMessage.HASH_SYMBOL,
-  },
-  {
-    regularExpression: /^.{2,}$/,
-    errorText: ErrorMessage.ONLY_HASH_SYMBOL,
-  },
-  {
-    regularExpression: /^#([a-zа-яё0-9]+)$/i,
-    errorText: ErrorMessage.SPECIAL_CHARACTER,
-  },
-  {
-    regularExpression: /^#([a-zа-яё0-9]+)$/i,
-    errorText: ErrorMessage.PUNCTUATION_CHARACTER,
-  },
-  {
-    regularExpression: /^#([a-zа-яё0-9]+)$/i,
-    errorText: ErrorMessage.EMOJI,
-  },
-  {
-    regularExpression: /^.{1,20}$/,
-    errorText: ErrorMessage.MAX_HASHTAG_LENGTH,
-  }
-];
+const errorMessage = {
+  hashtagDuplication: 'один и тот же хэштег не может быть использован дважды',
+  maxHashtagCount: `нельзя указать больше ${numDecline(MAX_HASHTAGS_COUNT, 'хэштега', 'хэштегов', 'хэштегов')}`,
+  maxHashtagLength: `максимальная длина одного хэштега ${numDecline(MAX_HASHTAG_LENGTH, 'символа', 'символов', 'символов')}, включая решётку`,
+  maxCommentLength: `длина комментария не может составлять больше ${numDecline(MAX_COMMENT_LENGTH, 'символа', 'символов', 'символов')}`,
+  allRulesForHashtag: 'хэштег начинается с символа #, может содержать только буквы и цифры, длина от 2 до 20 симоволов'
+};
 
 const bodyElement = document.querySelector('body');
 const uploadFormElement = document.querySelector('.img-upload__form');
@@ -51,18 +22,71 @@ const uploadCancelButtonElement = uploadFormElement.querySelector('#upload-cance
 const textHashtagsInputElement = uploadFormElement.querySelector('.text__hashtags');
 const textDescriptionTextareaElement = uploadFormElement.querySelector('.text__description');
 
-const pristine = new Pristine(uploadFormElement,
-  {
-    classTo: 'img-upload__form',
-    errorTextParent: 'img-upload__field-wrapper',
-    errorTextTag: 'div',
-    errorTextClass: 'img-upload__field-wrapper--error'
-  }
-);
+const onenPhotoEditor = () => {
+
+  const getHashtagArray = (string) => string.trim().split(/\s+/);
+
+  const pristine = new Pristine(uploadFormElement,
+    {
+      classTo: 'img-upload__form',
+      errorTextParent: 'img-upload__field-wrapper',
+      errorTextTag: 'div',
+      errorTextClass: 'img-upload__field-wrapper--error'
+    }
+  );
+
+  const validateHashtagsCount = (value) => {
+    const hashtags = getHashtagArray(value);
+    return hashtags.length <= MAX_HASHTAGS_COUNT;
+  };
+
+  const validateHashtagsDublicat = (value) => {
+    const hashtags = getHashtagArray(value);
+    const hashtagsSet = [...new Set(hashtags)];
+
+    return hashtagsSet.length === hashtags.length;
+  };
+
+  const validateHashtagsSpelling = (value) => {
+    const hashtags = getHashtagArray(value);
+    return hashtags.every((hashtag) => hashtagRegularExpression.test(hashtag));
+  };
+
+  const validateCommentsField = (value) => value.length <= MAX_COMMENT_LENGTH;
+
+  pristine.addValidator(
+    textHashtagsInputElement,
+    validateHashtagsSpelling,
+    errorMessage.allRulesForHashtag
+  );
+
+  pristine.addValidator(
+    textHashtagsInputElement,
+    validateHashtagsCount,
+    errorMessage.maxHashtagCount
+  );
+
+  pristine.addValidator(
+    textHashtagsInputElement,
+    validateHashtagsDublicat,
+    errorMessage.hashtagDuplication
+  );
+
+  pristine.addValidator(
+    textDescriptionTextareaElement,
+    validateCommentsField,
+    errorMessage.maxCommentLength
+  );
+
+  uploadFormElement.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    pristine.validate();
+  });
+};
 
 const onUploadCancelButtonElementClick = () => closePhotoEditor();
 
-function onDocumentKeydown (evt) {
+const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
 
@@ -74,7 +98,18 @@ function onDocumentKeydown (evt) {
       closePhotoEditor();
     }
   }
-}
+};
+
+const uploadImg = () => {
+  imgUploadInputElement.addEventListener('change', () => {
+    imgUploadOverlayElement.classList.remove('hidden');
+    bodyElement.classList.add('modal-open');
+    onenPhotoEditor();
+    document.addEventListener('keydown', onDocumentKeydown);
+    uploadCancelButtonElement.addEventListener('click', onUploadCancelButtonElementClick);
+  });
+};
+
 //Здесь функция объявлена декларативно так как к ней есть обращение до объявления
 function closePhotoEditor () {
   imgUploadOverlayElement.classList.add('hidden');
@@ -83,77 +118,5 @@ function closePhotoEditor () {
   uploadCancelButtonElement.removeEventListener('click', onUploadCancelButtonElementClick);
   imgUploadInputElement.value = '';
 }
-
-const uploadImg = () => {
-  imgUploadInputElement.addEventListener('change', () => {
-    imgUploadOverlayElement.classList.remove('hidden');
-    bodyElement.classList.add('modal-open');
-    document.addEventListener('keydown', onDocumentKeydown);
-    uploadCancelButtonElement.addEventListener('click', onUploadCancelButtonElementClick);
-  });
-};
-
-const createHashtagValidators = () => {
-  for (let i = 0; i < hashtagRestrictions.length; i++) {
-
-    const validateHashtag = (value) => {
-
-      const hashtags = value.trim().split(/\s+/);
-      let result = true;
-
-      hashtags.forEach((element) => {
-        if (element) {
-          result = hashtagRestrictions[i].regularExpression.test(element);
-          return result;
-        }
-      });
-
-      return result;
-    };
-
-    pristine.addValidator(
-      textHashtagsInputElement,
-      validateHashtag,
-      hashtagRestrictions[i].errorText
-    );
-  }
-};
-
-const validateHashtagsCount = (value) => {
-  const hashtags = value.trim().split(/\s+/);
-  return hashtags.length <= MAX_HASHTAGS_COUNT;
-};
-
-const validateCommentsField = (value) => value.length <= MAX_COMMENT_LENGTH;
-
-createHashtagValidators();
-
-const validateHashtagsDublicat = (value) => {
-  const hashtags = value.trim().split(/\s+/);
-  return !hashtags.some((hashtag, index) => hashtags.indexOf(hashtag) !== index);
-};
-
-pristine.addValidator(
-  textHashtagsInputElement,
-  validateHashtagsCount,
-  ErrorMessage.MAX_HASHTAGS_COUNT
-);
-
-pristine.addValidator(
-  textHashtagsInputElement,
-  validateHashtagsDublicat,
-  ErrorMessage.HASHTAG_DUPLICATION
-);
-
-pristine.addValidator(
-  textDescriptionTextareaElement,
-  validateCommentsField,
-  ErrorMessage.MAX_COMMENT_LENGTH
-);
-
-uploadFormElement.addEventListener('submit', (evt) => {
-  evt.preventDefault();
-  pristine.validate();
-});
 
 export { uploadImg };

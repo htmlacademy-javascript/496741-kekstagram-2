@@ -48,5 +48,5 @@ export {
   isEnterKey,
   isTabKey,
   clearElement,
-  numDecline,
+  numDecline
 };
