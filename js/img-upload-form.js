@@ -80,7 +80,10 @@ const onenPhotoEditor = () => {
 
   uploadFormElement.addEventListener('submit', (evt) => {
     evt.preventDefault();
-    pristine.validate();
+    if (pristine.validate()) {
+      textHashtagsInputElement.value = textHashtagsInputElement.value.trim().replaceAll(/\s+/g, ' ');
+      uploadFormElement.submit();
+    }
   });
 };
 
