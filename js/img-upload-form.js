@@ -21,6 +21,7 @@ const imgUploadOverlayElement = uploadFormElement.querySelector('.img-upload__ov
 const uploadCancelButtonElement = uploadFormElement.querySelector('#upload-cancel');
 const textHashtagsInputElement = uploadFormElement.querySelector('.text__hashtags');
 const textDescriptionTextareaElement = uploadFormElement.querySelector('.text__description');
+const sliderElement = uploadFormElement.querySelector('.effect-level__slider');
 
 const onenPhotoEditor = () => {
 
@@ -120,6 +121,7 @@ function closePhotoEditor () {
   document.removeEventListener('keydown', onDocumentKeydown);
   uploadCancelButtonElement.removeEventListener('click', onUploadCancelButtonElementClick);
   imgUploadInputElement.value = '';
+  sliderElement.noUiSlider.destroy();
 }
 
 export { uploadImg };
