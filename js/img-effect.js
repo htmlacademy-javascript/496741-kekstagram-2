@@ -80,6 +80,7 @@ const getImgEffect = () => {
 
     if (effect === 'none') {
       sliderFieldsetElement.classList.add('hidden');
+      imgElement.style.removeProperty('filter');
     } else {
 
       sliderFieldsetElement.classList.remove('hidden');
