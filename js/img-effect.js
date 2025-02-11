@@ -1,11 +1,25 @@
-const getImgEffect = () => {
-  const wrapperElement = document.querySelector('.img-upload__wrapper');
-  const sliderElement = wrapperElement.querySelector('.effect-level__slider');
-  const sliderFieldsetElement = wrapperElement.querySelector('.img-upload__effect-level');
-  const sliderInputElement = wrapperElement.querySelector('.effect-level__value');
-  const imgElement = wrapperElement.querySelector('.img-upload__preview img');
-  const effectsListElement = wrapperElement.querySelector('.effects__list');
+const ORIGINAL_EFFECT = 'none';
+const MAX_SCALE_VALUE = 1;
 
+const wrapperElement = document.querySelector('.img-upload__wrapper');
+const sliderElement = wrapperElement.querySelector('.effect-level__slider');
+const sliderFieldsetElement = wrapperElement.querySelector('.img-upload__effect-level');
+const sliderInputElement = wrapperElement.querySelector('.effect-level__value');
+const imgElement = wrapperElement.querySelector('.img-upload__preview img');
+const effectsListElement = wrapperElement.querySelector('.effects__list');
+
+const removeFilter = () => {
+  sliderFieldsetElement.classList.add('hidden');
+  imgElement.style.removeProperty('filter');
+};
+
+
+const removeImgEffect = () => {
+  imgElement.style.transform = `scale(${MAX_SCALE_VALUE})`;
+  removeFilter();
+};
+
+const getImgEffect = () => {
 
   const imgEffects = {
     none: {
@@ -56,20 +70,37 @@ const getImgEffect = () => {
   };
 
   noUiSlider.create(sliderElement, {
-    start: imgEffects.none.min,
+    start: imgEffects[ORIGINAL_EFFECT].min,
     connect: 'lower',
     range: {
-      min: imgEffects.none.min,
-      max: imgEffects.none.max
+      min: imgEffects[ORIGINAL_EFFECT].min,
+      max: imgEffects[ORIGINAL_EFFECT].max
     },
-    step: imgEffects.none.step,
+    step: imgEffects[ORIGINAL_EFFECT].step,
     format: {
       to: (value) => Number(value),
       from: (value) => parseFloat(value),
     }
   });
 
-  sliderFieldsetElement.classList.add('hidden');
+  const addFilter = (effect) => {
+    sliderFieldsetElement.classList.remove('hidden');
+
+    sliderElement.noUiSlider.updateOptions({
+      range: {
+        min: imgEffects[effect].min,
+        max: imgEffects[effect].max
+      },
+      start: imgEffects[effect].max,
+      step: imgEffects[effect].step
+    });
+
+    sliderElement.noUiSlider.on('update', () => {
+      imgElement.style.filter = imgEffects[effect].getFilter(sliderInputElement.value);
+    });
+  };
+
+  removeFilter();
 
   sliderElement.noUiSlider.on('update', () => {
     sliderInputElement.value = sliderElement.noUiSlider.get();
@@ -78,29 +109,14 @@ const getImgEffect = () => {
   const onEffectsListChange = (evt) => {
     const effect = evt.target.value;
 
-    if (effect === 'none') {
-      sliderFieldsetElement.classList.add('hidden');
-      imgElement.style.removeProperty('filter');
+    if (effect === ORIGINAL_EFFECT) {
+      removeFilter();
     } else {
-
-      sliderFieldsetElement.classList.remove('hidden');
-
-      sliderElement.noUiSlider.updateOptions({
-        range: {
-          min: imgEffects[effect].min,
-          max: imgEffects[effect].max
-        },
-        start: imgEffects[effect].max,
-        step: imgEffects[effect].step
-      });
-
-      sliderElement.noUiSlider.on('update', () => {
-        imgElement.style.filter = imgEffects[effect].getFilter(sliderInputElement.value);
-      });
+      addFilter(effect);
     }
   };
 
   effectsListElement.addEventListener('change', onEffectsListChange);
 };
 
-export { getImgEffect };
+export { getImgEffect, removeImgEffect };

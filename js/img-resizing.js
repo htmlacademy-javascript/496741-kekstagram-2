@@ -8,12 +8,14 @@ const configureImgResizing = () => {
   const scaleValueElement = document.querySelector('.scale__control--value');
   const imgElement = document.querySelector('.img-upload__preview img');
 
-  let currenScaleValue = parseFloat(scaleValueElement.value.replace('%', ''));
+  let currenScaleValue = parseFloat(scaleValueElement.value);
 
   const pressTheButton = (isIncrease) => {
     if (isIncrease && currenScaleValue < MAX_SCALE_VALUE) {
       currenScaleValue += RESIZING_STEP;
-    } else if (!isIncrease && currenScaleValue > MIN_SCALE_VALUE) {
+    }
+
+    if (!isIncrease && currenScaleValue > MIN_SCALE_VALUE) {
       currenScaleValue -= RESIZING_STEP;
     }
 
@@ -21,9 +23,9 @@ const configureImgResizing = () => {
     imgElement.style.transform = `scale(${currenScaleValue * 0.01})`;
   };
 
-  const onSmallerButtonClick = (evt) => pressTheButton(evt.target === biggerButtonElement);
+  const onSmallerButtonClick = () => pressTheButton(false);
 
-  const onBiggerButtonClick = (evt) => pressTheButton(evt.target === biggerButtonElement);
+  const onBiggerButtonClick = () => pressTheButton(true);
 
   smallerButtonElement.addEventListener('click', onSmallerButtonClick);
   biggerButtonElement.addEventListener('click', onBiggerButtonClick);

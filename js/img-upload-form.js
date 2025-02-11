@@ -1,4 +1,5 @@
 import { isEscapeKey, numDecline } from './util';
+import { removeImgEffect } from './img-effect';
 
 const MAX_COMMENT_LENGTH = 140;
 const MAX_HASHTAG_LENGTH = 20;
@@ -21,7 +22,6 @@ const imgUploadOverlayElement = uploadFormElement.querySelector('.img-upload__ov
 const uploadCancelButtonElement = uploadFormElement.querySelector('#upload-cancel');
 const textHashtagsInputElement = uploadFormElement.querySelector('.text__hashtags');
 const textDescriptionTextareaElement = uploadFormElement.querySelector('.text__description');
-const sliderElement = uploadFormElement.querySelector('.effect-level__slider');
 
 const onenPhotoEditor = () => {
 
@@ -121,7 +121,7 @@ function closePhotoEditor () {
   document.removeEventListener('keydown', onDocumentKeydown);
   uploadCancelButtonElement.removeEventListener('click', onUploadCancelButtonElementClick);
   imgUploadInputElement.value = '';
-  sliderElement.noUiSlider.destroy();
+  removeImgEffect();
 }
 
 export { uploadImg };
