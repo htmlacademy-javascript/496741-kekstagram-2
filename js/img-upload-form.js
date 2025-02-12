@@ -1,4 +1,5 @@
 import { isEscapeKey, numDecline } from './util';
+import { removeImgEffect } from './img-effect';
 
 const MAX_COMMENT_LENGTH = 140;
 const MAX_HASHTAG_LENGTH = 20;
@@ -80,7 +81,10 @@ const onenPhotoEditor = () => {
 
   uploadFormElement.addEventListener('submit', (evt) => {
     evt.preventDefault();
-    pristine.validate();
+    if (pristine.validate()) {
+      textHashtagsInputElement.value = textHashtagsInputElement.value.trim().replaceAll(/\s+/g, ' ');
+      uploadFormElement.submit();
+    }
   });
 };
 
@@ -117,6 +121,7 @@ function closePhotoEditor () {
   document.removeEventListener('keydown', onDocumentKeydown);
   uploadCancelButtonElement.removeEventListener('click', onUploadCancelButtonElementClick);
   imgUploadInputElement.value = '';
+  removeImgEffect();
 }
 
 export { uploadImg };
