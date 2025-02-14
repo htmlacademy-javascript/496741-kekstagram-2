@@ -6,23 +6,23 @@ const getTemplateMessage = (id) => {
     .content
     .querySelector(`.${id}`);
   const closeButtonElement = template.querySelector('button');
-
-  bodyElement.append(template);
+  const templateMessage = template.cloneNode(true);
+  bodyElement.append(templateMessage);
 
   const onCloseButtonElementClick = () => {
-    template.remove();
+    templateMessage.remove();
   };
 
   const onDocumentKeydown = (evt) => {
     if (isEscapeKey(evt)) {
       evt.preventDefault();
-      template.remove();
+      templateMessage.remove();
     }
   };
 
   const onDocumentClick = () => {
     if (!template.closest(`.${id}__inner`)) {
-      template.remove();
+      templateMessage.remove();
     }
   };
 

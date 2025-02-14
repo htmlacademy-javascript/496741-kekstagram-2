@@ -1,11 +1,16 @@
-import { isEscapeKey, numDecline, showAlert } from './util';
+import { isEscapeKey, numDecline } from './util';
 import { removeImgEffect } from './img-effect';
 import { sendData } from './api';
+import { getTemplateMessage } from './template-message';
 
 const MAX_COMMENT_LENGTH = 140;
 const MAX_HASHTAG_LENGTH = 20;
 const MAX_HASHTAGS_COUNT = 5;
 
+const MessageTemplateId = {
+  SUCCESS: 'success',
+  FAIL: 'error'
+};
 const SubmitButtonText = {
   IDLE: 'Опубликовать',
   SENDING: 'Публикую...'
@@ -101,16 +106,16 @@ const setUserFormSubmit = () => {
     if (pristine.validate()) {
       blockSubmitButton();
       const formData = new FormData(evt.target);
-      sendData(
-        () => {
+      sendData(formData)
+        .then(() => {
           closePhotoEditor();
           unblockSubmitButton();
-        },
-        () => {
-          showAlert();
+          getTemplateMessage(MessageTemplateId.SUCCESS);
+        })
+        .catch(() => {
           unblockSubmitButton();
-        },
-        formData);
+          getTemplateMessage(MessageTemplateId.FAIL);
+        });
     }
   });
 };

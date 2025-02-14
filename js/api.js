@@ -1,39 +1,34 @@
-import { getTemplateMessage } from './template-message';
+const BASE_URL = 'https://31.javascript.htmlacademy.pro/kekstagram';
 
-const SEND_ERROR_MESSAGE = 'Данные не валидны';
-const MessageTemplateId = {
-  SUCCESS: 'success',
-  FAIL: 'error'
+const Route = {
+  GET_DATA: '/data',
+  SEND_DATA: '/',
 };
 
-const getData = (onSuccess, onFail) => {
+const Method = {
+  GET: 'GET',
+  POST: 'POST',
+};
 
-  fetch('https://31.javascript.htmlacademy.pro/kekstagram/data')
-    .then((response) => response.json())
-    .then((photos) => {
-      onSuccess(photos);
+const ErrorText = {
+  GET_DATA: 'Не удалось загрузить данные. Попробуйте обновить страницу',
+  SEND_DATA: 'Не удалось отправить форму. Попробуйте ещё раз',
+};
+
+const load = (route, errorText, method = Method.GET, body = null) =>
+  fetch(`${BASE_URL}${route}`, {method, body})
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error();
+      }
+      return response.json();
     })
-    .catch((err) => {
-      onFail(err.message);
-    });
-};
-const sendData = (onSuccess, onFail, body) => {
-  fetch('https://31.javascript.htmlacademy.pro/kekstagram',
-    {
-      method: 'POST',
-      body,
-    },
-  ).then((response) => {
-    if(response.ok) {
-      onSuccess();
-      getTemplateMessage(MessageTemplateId.SUCCESS);
-    } else {
-      throw new Error(SEND_ERROR_MESSAGE);
-    }
-  })
     .catch(() => {
-      getTemplateMessage(MessageTemplateId.FAIL);
+      throw new Error(errorText);
     });
-};
+
+const getData = () => load(Route.GET_DATA, ErrorText.GET_DATA);
+
+const sendData = (body) => load(Route.SEND_DATA, ErrorText.SEND_DATA, Method.POST, body);
 
 export { getData, sendData };
