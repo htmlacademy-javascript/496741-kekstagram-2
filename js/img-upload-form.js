@@ -79,13 +79,20 @@ const onenPhotoEditor = () => {
     errorMessage.maxCommentLength
   );
 
-  uploadFormElement.addEventListener('submit', (evt) => {
-    evt.preventDefault();
-    if (pristine.validate()) {
-      textHashtagsInputElement.value = textHashtagsInputElement.value.trim().replaceAll(/\s+/g, ' ');
-      uploadFormElement.submit();
-    }
-  });
+  const setUserFormSubmit = () => {
+    uploadFormElement.addEventListener('submit', (evt) => {
+      evt.preventDefault();
+      if (pristine.validate()) {
+        const formData = new FormData(evt.target);
+        fetch('https://31.javascript.htmlacademy.pro/kekstagram',
+          {
+            method: 'POST',
+            body: formData
+          },
+        ).then(() => closePhotoEditor());
+      }
+    });
+  };
 };
 
 const onUploadCancelButtonElementClick = () => closePhotoEditor();
@@ -124,4 +131,4 @@ function closePhotoEditor () {
   removeImgEffect();
 }
 
-export { uploadImg };
+export { uploadImg, setUserFormSubmit };
