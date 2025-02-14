@@ -31,6 +31,4 @@ const getTemplateMessage = (id) => {
   closeButtonElement.addEventListener('click', onCloseButtonElementClick);
 };
 
-
-
 export { getTemplateMessage };
