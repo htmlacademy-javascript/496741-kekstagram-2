@@ -1,5 +1,7 @@
 import { isEscapeKey } from './util';
 
+const TIMEOUT_DEFAULT_DELAY = 2000;
+
 const getTemplateMessage = (id) => {
   const bodyElement = document.querySelector('body');
   const template = document.querySelector(`#${id}`)
@@ -9,26 +11,33 @@ const getTemplateMessage = (id) => {
   const templateMessage = template.cloneNode(true);
   bodyElement.append(templateMessage);
 
-  const onCloseButtonElementClick = () => {
+  const removeTemplateMessage = () => {
     templateMessage.remove();
+    document.removeEventListener('click', onDocumentClick);
+    document.removeEventListener('keydown', onDocumentKeydown);
   };
 
-  const onDocumentKeydown = (evt) => {
+  //Здесь функция объявлена декларативно так как к ней есть обращение до объявления
+  function onDocumentKeydown(evt) {
     if (isEscapeKey(evt)) {
       evt.preventDefault();
-      templateMessage.remove();
+      removeTemplateMessage();
     }
-  };
+  }
 
-  const onDocumentClick = () => {
-    if (!template.closest(`.${id}__inner`)) {
-      templateMessage.remove();
+  //Здесь функция объявлена декларативно так как к ней есть обращение до объявления
+  function onDocumentClick(evt) {
+    if (!evt.target.closest(`.${id}__inner`) || (evt.target.closest(`.${id}__button`))) {
+      removeTemplateMessage();
     }
-  };
+  }
+
+  if (!closeButtonElement) {
+    setTimeout(() => removeTemplateMessage(), TIMEOUT_DEFAULT_DELAY);
+  }
 
   document.addEventListener('keydown', onDocumentKeydown);
   document.addEventListener('click', onDocumentClick);
-  closeButtonElement.addEventListener('click', onCloseButtonElementClick);
 };
 
 export { getTemplateMessage };

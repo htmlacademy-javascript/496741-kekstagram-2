@@ -1,3 +1,4 @@
+const TIMEOUT_DEFAULT_DELAY = 500;
 const keyCode = {
   ESCAPE: 'Escape',
   ENTER: 'Enter',
@@ -25,10 +26,21 @@ const clearElement = (element) => {
   element.innerHTML = '';
 };
 
+function debounce (callback, timeoutDelay = TIMEOUT_DEFAULT_DELAY) {
+  let timeoutId;
+
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+}
+
+
 export {
   isEscapeKey,
   isEnterKey,
   isTabKey,
   clearElement,
-  numDecline
+  numDecline,
+  debounce
 };
