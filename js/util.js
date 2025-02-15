@@ -1,4 +1,4 @@
-const TIMEOUT_DEFAULT_DELAY = 500;
+const TIMEOUT_DEFAULT_DELAY = 5000;
 const keyCode = {
   ESCAPE: 'Escape',
   ENTER: 'Enter',
@@ -18,6 +18,15 @@ const numDecline = (number, nominative, genitiveSingular, genitivePlural) => {
   }
 };
 
+const shuffleArray = (array) => {
+  const shuffledArray = array.slice();
+  for (let i = shuffledArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]]; // Меняем элементы местами
+  }
+  return shuffledArray;
+};
+
 const isEscapeKey = (event) => event.key === keyCode.ESCAPE;
 const isEnterKey = (event) => event.key === keyCode.ENTER;
 const isTabKey = (event) => event.key === keyCode.TAB;
@@ -26,14 +35,17 @@ const clearElement = (element) => {
   element.innerHTML = '';
 };
 
-function debounce (callback, timeoutDelay = TIMEOUT_DEFAULT_DELAY) {
+const debounce = (callback, timeoutDelay = TIMEOUT_DEFAULT_DELAY) => {
   let timeoutId;
 
-  return (...rest) => {
+  return function (...args) {
     clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+
+    timeoutId = setTimeout(() => {
+      callback.apply(this, args);
+    }, timeoutDelay);
   };
-}
+};
 
 
 export {
@@ -42,5 +54,6 @@ export {
   isTabKey,
   clearElement,
   numDecline,
-  debounce
+  debounce,
+  shuffleArray
 };
