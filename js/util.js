@@ -1,4 +1,4 @@
-const TIMEOUT_DEFAULT_DELAY = 5000;
+const TIMEOUT_DEFAULT_DELAY = 500;
 const keyCode = {
   ESCAPE: 'Escape',
   ENTER: 'Enter',

@@ -55,7 +55,7 @@ const getFilters = (photos) => {
 const setFilterClick = (photos, callback) => {
   const imgFiltersFormElement = imgFiltersElement.querySelector('.img-filters__form');
 
-  const onImgFiltersFormClick = (evt) => {
+  const onImgFiltersFormElementClick = (evt) => {
     const filterElement = evt.target;
     if (filterElement.matches('.img-filters__button') && !(filterElement === activeFilterElement)) {
       overrideActiveFilter(filterElement);
@@ -64,7 +64,7 @@ const setFilterClick = (photos, callback) => {
     }
   };
 
-  imgFiltersFormElement.addEventListener('click', onImgFiltersFormClick);
+  imgFiltersFormElement.addEventListener('click', onImgFiltersFormElementClick);
 };
 
 export { getFilters, setFilterClick };
