@@ -109,12 +109,13 @@ const setUserFormSubmit = () => {
       sendData(formData)
         .then(() => {
           closePhotoEditor();
-          unblockSubmitButton();
           getTemplateMessage(MessageTemplateId.SUCCESS);
         })
         .catch(() => {
-          unblockSubmitButton();
           getTemplateMessage(MessageTemplateId.FAIL);
+        })
+        .finally(() => {
+          unblockSubmitButton();
         });
     }
   });

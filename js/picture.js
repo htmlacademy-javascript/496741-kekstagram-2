@@ -1,8 +1,9 @@
+const picturesContainerElement = document.querySelector('.pictures');
+
 const renderPhotos = (photos) => {
   const pictureTemplate = document.querySelector('#picture')
     .content
     .querySelector('.picture');
-  const picturesContainerElement = document.querySelector('.pictures');
 
   const picturesFragment = document.createDocumentFragment();
 
@@ -21,4 +22,9 @@ const renderPhotos = (photos) => {
   picturesContainerElement.append(picturesFragment);
 };
 
-export { renderPhotos };
+const clearPhotos = () => {
+  const childrenToRemove = picturesContainerElement.querySelectorAll('.picture');
+  childrenToRemove.forEach((child) => child.remove());
+};
+
+export { renderPhotos, clearPhotos };
