@@ -7,6 +7,7 @@ import { generateBigPictureModal } from './gallery';
 import { getTemplateMessage } from './template-message';
 import { getFilters, setFilterClick } from './filter';
 import { debounce } from './util';
+import { uploadFile } from './upload-file';
 
 const MESSAGE_TEMPLATE_ID = 'data-error';
 
@@ -26,6 +27,7 @@ getData()
     getTemplateMessage(MESSAGE_TEMPLATE_ID);
   });
 openPhotoEditor();
+uploadFile();
 setUserFormSubmit();
 configureImgResizing();
 getImgEffect();
