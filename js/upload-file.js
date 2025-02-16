@@ -1,5 +1,5 @@
 const uploadFile = () => {
-  const FILE_TYPES = ['jpg', 'jpeg', 'png'];
+  const FILE_TYPES = ['jpg', 'jpeg', 'png', 'svg', 'webp', 'bmp', 'gif'];
 
   const uploadFormElement = document.querySelector('.img-upload__form');
   const imgUploadInputElement = uploadFormElement.querySelector('.img-upload__input');
