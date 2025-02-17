@@ -13,7 +13,6 @@ const removeFilter = () => {
   imgElement.style.removeProperty('filter');
 };
 
-
 const removeImgEffect = () => {
   imgElement.style.transform = `scale(${MAX_SCALE_VALUE})`;
   removeFilter();
