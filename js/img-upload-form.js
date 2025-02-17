@@ -2,6 +2,7 @@ import { isEscapeKey, numDecline } from './util';
 import { removeImgEffect } from './img-effect';
 import { sendData } from './api';
 import { getTemplateMessage } from './template-message';
+import { redrawPicture } from './upload-file';
 
 const MAX_COMMENT_LENGTH = 140;
 const MAX_HASHTAG_LENGTH = 20;
@@ -35,60 +36,64 @@ const textHashtagsInputElement = uploadFormElement.querySelector('.text__hashtag
 const textDescriptionTextareaElement = uploadFormElement.querySelector('.text__description');
 const submitButtonElement = uploadFormElement.querySelector('.img-upload__submit');
 
-
-const getHashtagArray = (string) => string.trim().split(/\s+/);
-
 const pristine = new Pristine(uploadFormElement,
   {
-    classTo: 'img-upload__form',
+    classTo: 'img-upload__field-wrapper',
     errorTextParent: 'img-upload__field-wrapper',
     errorTextTag: 'div',
     errorTextClass: 'img-upload__field-wrapper--error'
   }
 );
 
-const validateHashtagsCount = (value) => {
-  const hashtags = getHashtagArray(value);
-  return hashtags.length <= MAX_HASHTAGS_COUNT;
+const validatePristine = () => {
+  const getHashtagArray = (string) => string.trim().split(/\s+/);
+
+  const validateHashtagsCount = (value) => {
+    const hashtags = getHashtagArray(value);
+    return hashtags.length <= MAX_HASHTAGS_COUNT;
+  };
+
+  const validateHashtagsDublicat = (value) => {
+    const hashtags = getHashtagArray(value);
+    const hashtagsSet = [...new Set(hashtags)];
+
+    return hashtagsSet.length === hashtags.length;
+  };
+
+  const validateHashtagsSpelling = (value) => {
+    const hashtags = getHashtagArray(value);
+    return hashtags.every((hashtag) => hashtagRegularExpression.test(hashtag) || hashtag === '');
+  };
+
+  const validateCommentsField = (value) => value.length <= MAX_COMMENT_LENGTH;
+
+  pristine.addValidator(
+    textHashtagsInputElement,
+    validateHashtagsSpelling,
+    errorMessage.allRulesForHashtag
+  );
+
+  pristine.addValidator(
+    textHashtagsInputElement,
+    validateHashtagsCount,
+    errorMessage.maxHashtagCount
+  );
+
+  pristine.addValidator(
+    textHashtagsInputElement,
+    validateHashtagsDublicat,
+    errorMessage.hashtagDuplication
+  );
+
+  pristine.addValidator(
+    textDescriptionTextareaElement,
+    validateCommentsField,
+    errorMessage.maxCommentLength
+  );
+
 };
 
-const validateHashtagsDublicat = (value) => {
-  const hashtags = getHashtagArray(value);
-  const hashtagsSet = [...new Set(hashtags)];
-
-  return hashtagsSet.length === hashtags.length;
-};
-
-const validateHashtagsSpelling = (value) => {
-  const hashtags = getHashtagArray(value);
-  return hashtags.every((hashtag) => hashtagRegularExpression.test(hashtag) || hashtag === '');
-};
-
-const validateCommentsField = (value) => value.length <= MAX_COMMENT_LENGTH;
-
-pristine.addValidator(
-  textHashtagsInputElement,
-  validateHashtagsSpelling,
-  errorMessage.allRulesForHashtag
-);
-
-pristine.addValidator(
-  textHashtagsInputElement,
-  validateHashtagsCount,
-  errorMessage.maxHashtagCount
-);
-
-pristine.addValidator(
-  textHashtagsInputElement,
-  validateHashtagsDublicat,
-  errorMessage.hashtagDuplication
-);
-
-pristine.addValidator(
-  textDescriptionTextareaElement,
-  validateCommentsField,
-  errorMessage.maxCommentLength
-);
+validatePristine();
 
 const blockSubmitButton = () => {
   submitButtonElement.disabled = true;
@@ -147,11 +152,12 @@ const openPhotoEditor = () => {
   });
 };
 
-const clearInputValues = () => {
+const clearForm = () => {
   imgUploadInputElement.value = '';
   textHashtagsInputElement.value = '';
   textDescriptionTextareaElement.value = '';
   removeImgEffect();
+  redrawPicture('');
 };
 //Здесь функция объявлена декларативно так как к ней есть обращение до объявления
 function closePhotoEditor () {
@@ -159,7 +165,7 @@ function closePhotoEditor () {
   bodyElement.classList.remove('modal-open');
   document.removeEventListener('keydown', onDocumentKeydown);
   uploadCancelButtonElement.removeEventListener('click', onUploadCancelButtonElementClick);
-  clearInputValues();
+  clearForm();
 }
 
 export { openPhotoEditor, setUserFormSubmit };
