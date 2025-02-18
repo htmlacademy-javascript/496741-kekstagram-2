@@ -46,7 +46,7 @@ const pristine = new Pristine(uploadFormElement,
 );
 
 const validatePristine = () => {
-  const getHashtagArray = (string) => string.trim().split(/\s+/);
+  const getHashtagArray = (string) => string.toLowerCase().trim().split(/\s+/);
 
   const validateHashtagsCount = (value) => {
     const hashtags = getHashtagArray(value);
@@ -171,9 +171,9 @@ const clearForm = () => {
 //Здесь функция объявлена декларативно так как к ней есть обращение до объявления
 function closePhotoEditor () {
   bodyElement.classList.remove('modal-open');
+  clearForm();
   removeDocumentKeydown();
   uploadCancelButtonElement.removeEventListener('click', onUploadCancelButtonElementClick);
-  clearForm();
 }
 
-export { openPhotoEditor, setUserFormSubmit, addFormOverlay, removeFormOverlay, setDocumentKeydown };
+export { openPhotoEditor, setUserFormSubmit, setDocumentKeydown };
