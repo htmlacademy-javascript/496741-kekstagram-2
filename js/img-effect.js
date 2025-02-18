@@ -1,5 +1,6 @@
+import { resetScaleValue } from './img-resizing';
+
 const ORIGINAL_EFFECT = 'none';
-const MAX_SCALE_VALUE = 1;
 
 const wrapperElement = document.querySelector('.img-upload__wrapper');
 const sliderElement = wrapperElement.querySelector('.effect-level__slider');
@@ -14,7 +15,7 @@ const removeFilter = () => {
 };
 
 const removeImgEffect = () => {
-  imgElement.style.transform = `scale(${MAX_SCALE_VALUE})`;
+  resetScaleValue();
   removeFilter();
 };
 
@@ -106,7 +107,8 @@ const getImgEffect = () => {
   });
 
   const onEffectsListChange = (evt) => {
-    const effect = evt.target.value;
+    const effectElement = evt.target;
+    const effect = effectElement.value;
 
     if (effect === ORIGINAL_EFFECT) {
       removeFilter();
