@@ -1,3 +1,4 @@
+import { setDocumentKeydown } from './img-upload-form';
 import { isEscapeKey } from './util';
 
 const TIMEOUT_DEFAULT_DELAY = 2000;
@@ -13,6 +14,7 @@ const getTemplateMessage = (id) => {
 
   const removeTemplateMessage = () => {
     templateMessage.remove();
+    setDocumentKeydown();
     document.removeEventListener('click', onDocumentClick);
     document.removeEventListener('keydown', onDocumentKeydown);
   };

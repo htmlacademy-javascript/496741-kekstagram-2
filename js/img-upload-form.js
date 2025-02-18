@@ -95,6 +95,9 @@ const validatePristine = () => {
 
 validatePristine();
 
+const addFormOverlay = () => imgUploadOverlayElement.classList.remove('hidden');
+const removeFormOverlay = () => imgUploadOverlayElement.classList.add('hidden');
+
 const blockSubmitButton = () => {
   submitButtonElement.disabled = true;
   submitButtonElement.textContent = SubmitButtonText.SENDING;
@@ -104,28 +107,6 @@ const unblockSubmitButton = () => {
   submitButtonElement.disabled = false;
   submitButtonElement.textContent = SubmitButtonText.IDLE;
 };
-
-const setUserFormSubmit = () => {
-  uploadFormElement.addEventListener('submit', (evt) => {
-    evt.preventDefault();
-    if (pristine.validate()) {
-      blockSubmitButton();
-      const formData = new FormData(evt.target);
-      sendData(formData)
-        .then(() => {
-          closePhotoEditor();
-          getTemplateMessage(MessageTemplateId.SUCCESS);
-        })
-        .catch(() => {
-          getTemplateMessage(MessageTemplateId.FAIL);
-        })
-        .finally(() => {
-          unblockSubmitButton();
-        });
-    }
-  });
-};
-
 
 const onUploadCancelButtonElementClick = () => closePhotoEditor();
 
@@ -143,11 +124,36 @@ const onDocumentKeydown = (evt) => {
   }
 };
 
+const setDocumentKeydown = () => document.addEventListener('keydown', onDocumentKeydown);
+const removeDocumentKeydown = () => document.removeEventListener('keydown', onDocumentKeydown);
+
+const setUserFormSubmit = () => {
+  uploadFormElement.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    if (pristine.validate()) {
+      blockSubmitButton();
+      const formData = new FormData(evt.target);
+      sendData(formData)
+        .then(() => {
+          closePhotoEditor();
+          getTemplateMessage(MessageTemplateId.SUCCESS);
+        })
+        .catch(() => {
+          removeDocumentKeydown();
+          getTemplateMessage(MessageTemplateId.FAIL);
+        })
+        .finally(() => {
+          unblockSubmitButton();
+        });
+    }
+  });
+};
+
 const openPhotoEditor = () => {
   imgUploadInputElement.addEventListener('change', () => {
-    imgUploadOverlayElement.classList.remove('hidden');
+    addFormOverlay();
     bodyElement.classList.add('modal-open');
-    document.addEventListener('keydown', onDocumentKeydown);
+    setDocumentKeydown();
     uploadCancelButtonElement.addEventListener('click', onUploadCancelButtonElementClick);
   });
 };
@@ -158,14 +164,16 @@ const clearForm = () => {
   textDescriptionTextareaElement.value = '';
   removeImgEffect();
   redrawPicture('');
+  pristine.reset();
+  removeFormOverlay();
 };
+
 //Здесь функция объявлена декларативно так как к ней есть обращение до объявления
 function closePhotoEditor () {
-  imgUploadOverlayElement.classList.add('hidden');
   bodyElement.classList.remove('modal-open');
-  document.removeEventListener('keydown', onDocumentKeydown);
+  removeDocumentKeydown();
   uploadCancelButtonElement.removeEventListener('click', onUploadCancelButtonElementClick);
   clearForm();
 }
 
-export { openPhotoEditor, setUserFormSubmit };
+export { openPhotoEditor, setUserFormSubmit, addFormOverlay, removeFormOverlay, setDocumentKeydown };
