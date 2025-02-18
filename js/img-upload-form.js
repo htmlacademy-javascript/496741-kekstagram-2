@@ -137,6 +137,7 @@ const setUserFormSubmit = () => {
         .then(() => {
           closePhotoEditor();
           getTemplateMessage(MessageTemplateId.SUCCESS);
+          setDocumentKeydown();
         })
         .catch(() => {
           removeDocumentKeydown();
