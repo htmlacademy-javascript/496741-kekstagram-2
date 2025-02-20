@@ -5,7 +5,7 @@ const keyCode = {
   TAB: 'Tab'
 };
 
-const numDecline = (number, nominative, genitiveSingular, genitivePlural) => {
+const changeEndingNoun = (number, nominative, genitiveSingular, genitivePlural) => {
   const mod10 = number % 10;
   const mod100 = number % 100;
 
@@ -18,18 +18,16 @@ const numDecline = (number, nominative, genitiveSingular, genitivePlural) => {
   }
 };
 
-const shuffleArray = (array) => {
-  const shuffledArray = array.slice();
-  for (let i = shuffledArray.length - 1; i > 0; i--) {
+const shuffleArray = (photos) => {
+  const shuffledPhotos = photos.slice();
+  for (let i = shuffledPhotos.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]]; // Меняем элементы местами
+    [shuffledPhotos[i], shuffledPhotos[j]] = [shuffledPhotos[j], shuffledPhotos[i]]; // Меняем элементы местами
   }
-  return shuffledArray;
+  return shuffledPhotos;
 };
 
 const isEscapeKey = (event) => event.key === keyCode.ESCAPE;
-const isEnterKey = (event) => event.key === keyCode.ENTER;
-const isTabKey = (event) => event.key === keyCode.TAB;
 
 const clearElement = (element) => {
   element.innerHTML = '';
@@ -50,10 +48,8 @@ const debounce = (callback, timeoutDelay = TIMEOUT_DEFAULT_DELAY) => {
 
 export {
   isEscapeKey,
-  isEnterKey,
-  isTabKey,
   clearElement,
-  numDecline,
+  changeEndingNoun,
   debounce,
   shuffleArray
 };

@@ -1,4 +1,4 @@
-import { isEscapeKey, numDecline } from './util';
+import { isEscapeKey, changeEndingNoun } from './util';
 import { removeImgEffect } from './img-effect';
 import { sendData } from './api';
 import { getTemplateMessage } from './template-message';
@@ -7,6 +7,7 @@ import { redrawPicture } from './upload-file';
 const MAX_COMMENT_LENGTH = 140;
 const MAX_HASHTAG_LENGTH = 20;
 const MAX_HASHTAGS_COUNT = 5;
+const HASHTAG_REGULAR_EXPRESSION = /^#[a-zа-яё0-9]{1,19}$/i;
 
 const MessageTemplateId = {
   SUCCESS: 'success',
@@ -17,13 +18,11 @@ const SubmitButtonText = {
   SENDING: 'Публикую...'
 };
 
-const hashtagRegularExpression = /^#[a-zа-яё0-9]{1,19}$/i;
-
 const errorMessage = {
   hashtagDuplication: 'один и тот же хэштег не может быть использован дважды',
-  maxHashtagCount: `нельзя указать больше ${numDecline(MAX_HASHTAGS_COUNT, 'хэштега', 'хэштегов', 'хэштегов')}`,
-  maxHashtagLength: `максимальная длина одного хэштега ${numDecline(MAX_HASHTAG_LENGTH, 'символа', 'символов', 'символов')}, включая решётку`,
-  maxCommentLength: `длина комментария не может составлять больше ${numDecline(MAX_COMMENT_LENGTH, 'символа', 'символов', 'символов')}`,
+  maxHashtagCount: `нельзя указать больше ${changeEndingNoun(MAX_HASHTAGS_COUNT, 'хэштега', 'хэштегов', 'хэштегов')}`,
+  maxHashtagLength: `максимальная длина одного хэштега ${changeEndingNoun(MAX_HASHTAG_LENGTH, 'символа', 'символов', 'символов')}, включая решётку`,
+  maxCommentLength: `длина комментария не может составлять больше ${changeEndingNoun(MAX_COMMENT_LENGTH, 'символа', 'символов', 'символов')}`,
   allRulesForHashtag: 'хэштег начинается с символа #, может содержать только буквы и цифры, длина от 2 до 20 симоволов'
 };
 
@@ -62,7 +61,7 @@ const validatePristine = () => {
 
   const validateHashtagsSpelling = (value) => {
     const hashtags = getHashtagArray(value);
-    return hashtags.every((hashtag) => hashtagRegularExpression.test(hashtag) || hashtag === '');
+    return hashtags.every((hashtag) => HASHTAG_REGULAR_EXPRESSION.test(hashtag) || hashtag === '');
   };
 
   const validateCommentsField = (value) => value.length <= MAX_COMMENT_LENGTH;
