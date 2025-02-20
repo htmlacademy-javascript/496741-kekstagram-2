@@ -15,28 +15,28 @@ const sortByDecreasing = (firstElement, secondElement) => {
 const filter = {
   default: {
     id: 'filter-default',
-    getFilter(array) {
-      return array.slice();
+    getFilter(photos) {
+      return photos.slice();
     }
   },
   random: {
     id: 'filter-random',
-    getFilter(array) {
-      return shuffleArray(array.slice()).slice(0, RANDOM_PHOTOS_LENGTH);
+    getFilter(photos) {
+      return shuffleArray(photos.slice()).slice(0, RANDOM_PHOTOS_LENGTH);
     }
   },
   discussed: {
     id: 'filter-discussed',
-    getFilter(array) {
-      return array.slice().sort(sortByDecreasing);
+    getFilter(photos) {
+      return photos.slice().sort(sortByDecreasing);
     }
   }
 };
 
-const applyFilter = (array, activeElement) => {
+const applyFilter = (photos, activeElement) => {
   for (const key in filter) {
     if (filter[key].id === activeElement.id) {
-      return filter[key].getFilter(array);
+      return filter[key].getFilter(photos);
     }
   }
 };

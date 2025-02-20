@@ -14,7 +14,10 @@ const getScaleValue = (scaleValue) => {
   imgElement.style.transform = `scale(${scaleValue * 0.01})`;
 };
 
-const resetScaleValue = () => getScaleValue(MAX_SCALE_VALUE);
+const resetScaleValue = () => {
+  getScaleValue(MAX_SCALE_VALUE);
+  currenScaleValue = MAX_SCALE_VALUE;
+};
 
 const configureImgResizing = () => {
   const pressTheButton = (isIncrease) => {

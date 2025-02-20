@@ -23,8 +23,8 @@ const renderPhotos = (photos) => {
 };
 
 const clearPhotos = () => {
-  const childrenToRemove = picturesContainerElement.querySelectorAll('.picture');
-  childrenToRemove.forEach((child) => child.remove());
+  const pictures = picturesContainerElement.querySelectorAll('.picture');
+  pictures.forEach((picture) => picture.remove());
 };
 
 export { renderPhotos, clearPhotos };
